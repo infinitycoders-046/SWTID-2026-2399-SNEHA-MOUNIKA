@@ -1,0 +1,520 @@
+<!-- templates/dashboard02.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard 02 | Heritage Treasures</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 80%;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 80px 0 40px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.15);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #333;
+            border-left: 4px solid #f5576c;
+            padding-left: 12px;
+        }
+
+        .site-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .site-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .site-item:hover {
+            background: #f8f9fa;
+        }
+
+        .site-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .site-value {
+            font-weight: 700;
+            color: #f5576c;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 50px;
+        }
+
+        .tableau-container {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-landmark"></i> Heritage Treasures
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard01">Dashboard 01</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard02">Dashboard 02</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/story">Story</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br><br>
+    <div class="dashboard-header">
+        <div class="container">
+            <h1 class="dashboard-title">Dashboard 02: Visitor & Area Analytics</h1>
+            <p class="dashboard-subtitle">Comparing popularity, scale, and impact of World Heritage Sites</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="tableau-container">
+            <div class='tableauPlaceholder' id='viz1781374962865' style='position: relative'>
+                <noscript>
+                    <a href='#'>
+                        <img alt='Dashboard 2' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;He&#47;HeritageTreasuresAnIn-DepthAnalysisofUNESCOWorldHeritageSitesinTableau-Dashboard02&#47;Dashboard2&#47;1_rss.png' style='border: none' />
+                    </a>
+                </noscript>
+                <object class='tableauViz' style='display:none;'>
+                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                    <param name='embed_code_version' value='3' />
+                    <param name='site_root' value='' />
+                    <param name='name' value='HeritageTreasuresAnIn-DepthAnalysisofUNESCOWorldHeritageSitesinTableau-Dashboard02&#47;Dashboard2' />
+                    <param name='tabs' value='no' />
+                    <param name='toolbar' value='yes' />
+                    <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;He&#47;HeritageTreasuresAnIn-DepthAnalysisofUNESCOWorldHeritageSitesinTableau-Dashboard02&#47;Dashboard2&#47;1.png' />
+                    <param name='animate_transition' value='yes' />
+                    <param name='display_static_image' value='yes' />
+                    <param name='display_spinner' value='yes' />
+                    <param name='display_overlay' value='yes' />
+                    <param name='display_count' value='yes' />
+                    <param name='language' value='en-US' />
+                    <param name='filter' value='publish=yes' />
+                </object>
+            </div>
+            <script type='text/javascript'>
+                var divElement = document.getElementById('viz1781374962865');
+                var vizElement = divElement.getElementsByTagName('object')[0];
+                if (divElement.offsetWidth > 800) {
+                    vizElement.style.width = '1600px';
+                    vizElement.style.height = '1327px';
+                } else if (divElement.offsetWidth > 500) {
+                    vizElement.style.width = '1600px';
+                    vizElement.style.height = '1327px';
+                } else {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '1277px';
+                }
+                var scriptElement = document.createElement('script');
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2024 Heritage Treasures | Data visualization and analysis</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<!-- templates/dashboard02.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard 02 | Heritage Treasures</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 80%;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 80px 0 40px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 50px;
+        }
+
+        /* Responsive Tableau Container */
+        .tableau-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .tableau-container {
+            position: relative;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .tableauPlaceholder {
+            position: relative;
+            width: 100% !important;
+        }
+
+        .tableauPlaceholder object,
+        .tableauViz {
+            width: 100% !important;
+            min-height: 600px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .tableauPlaceholder object,
+            .tableauViz {
+                min-height: 550px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-title {
+                font-size: 2rem;
+            }
+            .tableauPlaceholder object,
+            .tableauViz {
+                min-height: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 60px 0 30px;
+            }
+            .dashboard-title {
+                font-size: 1.8rem;
+            }
+            .tableauPlaceholder object,
+            .tableauViz {
+                min-height: 450px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .tableauPlaceholder object,
+            .tableauViz {
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-landmark"></i> Heritage Treasures
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard01">Dashboard 01</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard02">Dashboard 02</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/story">Story</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br><br>
+    <div class="dashboard-header">
+        <div class="container">
+            <h1 class="dashboard-title">Dashboard 02: Visitor & Area Analytics</h1>
+            <p class="dashboard-subtitle">Comparing popularity, scale, and impact of World Heritage Sites</p>
+        </div>
+    </div>
+
+    <div class="tableau-wrapper">
+        <div class="tableau-container">
+            <div class='tableauPlaceholder' id='viz1781374962865' style='position: relative; width: 100%;'>
+                <noscript>
+                    <a href='#'>
+                        <img alt='Dashboard 2' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;He&#47;HeritageTreasuresAnIn-DepthAnalysisofUNESCOWorldHeritageSitesinTableau-Dashboard02&#47;Dashboard2&#47;1_rss.png' style='border: none; width: 100%;' />
+                    </a>
+                </noscript>
+                <object class='tableauViz' style='display:none; width: 100%; height: auto;'>
+                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                    <param name='embed_code_version' value='3' />
+                    <param name='site_root' value='' />
+                    <param name='name' value='HeritageTreasuresAnIn-DepthAnalysisofUNESCOWorldHeritageSitesinTableau-Dashboard02&#47;Dashboard2' />
+                    <param name='tabs' value='no' />
+                    <param name='toolbar' value='yes' />
+                    <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;He&#47;HeritageTreasuresAnIn-DepthAnalysisofUNESCOWorldHeritageSitesinTableau-Dashboard02&#47;Dashboard2&#47;1.png' />
+                    <param name='animate_transition' value='yes' />
+                    <param name='display_static_image' value='yes' />
+                    <param name='display_spinner' value='yes' />
+                    <param name='display_overlay' value='yes' />
+                    <param name='display_count' value='yes' />
+                    <param name='language' value='en-US' />
+                    <param name='filter' value='publish=yes' />
+                </object>
+            </div>
+            <script type='text/javascript'>
+                var divElement = document.getElementById('viz1781374962865');
+                var vizElement = divElement.getElementsByTagName('object')[0];
+
+                // Responsive sizing based on screen width
+                if (window.innerWidth > 1200) {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '900px';
+                } else if (window.innerWidth > 992) {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '800px';
+                } else if (window.innerWidth > 768) {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '700px';
+                } else if (window.innerWidth > 576) {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '600px';
+                } else {
+                    vizElement.style.width = '100%';
+                    vizElement.style.height = '500px';
+                }
+
+                // Also handle window resize events
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 1200) {
+                        vizElement.style.height = '900px';
+                    } else if (window.innerWidth > 992) {
+                        vizElement.style.height = '800px';
+                    } else if (window.innerWidth > 768) {
+                        vizElement.style.height = '700px';
+                    } else if (window.innerWidth > 576) {
+                        vizElement.style.height = '600px';
+                    } else {
+                        vizElement.style.height = '500px';
+                    }
+                });
+
+                var scriptElement = document.createElement('script');
+                scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+                vizElement.parentNode.insertBefore(scriptElement, vizElement);
+            </script>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2024 Heritage Treasures | Data visualization and analysis</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
